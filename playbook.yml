@@ -1,4 +1,7 @@
 - hosts: webservers
+  vars:
+    root_dir: /usr/share/nginx/html
+    nginx_port: 80
   tasks:
     - name: update APT cache
       ansible.builtin.apt: 
@@ -65,12 +68,12 @@
     - name: Copy HTML file
       ansible.builtin.copy:
         src: files/index.html
-        dest: /usr/share/nginx/html/index.html
+        dest: "{{root_dir}}/index.html"
       become: yes
       tags: nginx
 
     - name: Copy Nginx configuration file
-      ansible.builtin.copy:
+      ansible.builtin.template:
         src: files/nginx.conf
         dest: /etc/nginx/nginx.conf
       notify: restart nginx
