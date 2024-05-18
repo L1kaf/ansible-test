@@ -12,3 +12,6 @@ make:
 
 nodejs:
 	ansible-playbook playbook.yml -i inventory.ini -u vagrant -t git
+
+nginx:
+	ansible-playbook playbook.yml -i inventory.ini -u vagrant -t nginx

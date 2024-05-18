@@ -53,3 +53,35 @@
        name: tirion
       become: yes
       tags: user
+
+    - name: install nginx
+      ansible.builtin.apt: 
+        name: nginx 
+        state: present 
+        update_cache: yes
+      become: yes
+      tags: nginx
+
+    - name: Copy HTML file
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /usr/share/nginx/html/index.html
+      become: yes
+      tags: nginx
+
+    - name: Copy Nginx configuration file
+      ansible.builtin.copy:
+        src: files/nginx.conf
+        dest: /etc/nginx/nginx.conf
+      notify: restart nginx
+      become: yes
+      tags: nginx
+    
+  handlers:
+    - name: restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      become: yes
+
+      
