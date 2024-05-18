@@ -1,4 +1,5 @@
 - hosts: webservers
+  gather_facts: no
   vars:
     root_dir: /usr/share/nginx/html
     nginx_port: 80
