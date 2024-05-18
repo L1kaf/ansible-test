@@ -1,2 +1,2 @@
-ping:
+uptime:
 	ansible all -i inventory.ini -u vagrant -a 'uptime'
