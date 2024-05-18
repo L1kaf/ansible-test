@@ -3,6 +3,10 @@
   vars:
     root_dir: /usr/share/nginx/html
     nginx_port: 80
+    users: 
+      - jaime
+      - sansa
+      - robert
   tasks:
     - name: update APT cache
       ansible.builtin.apt: 
@@ -33,31 +37,44 @@
       become: yes
       tags: nodejs
 
-    - name: remove git
-      ansible.builtin.apt:
-       name: git
-       state: absent
+    - name: create users
+      ansible.builtin.user:
+       name: "{{item}}"
       become: yes
+      with_items: "{{users}}"
+      tags: user
+
+    - name: Create SSH directory for each user
+      ansible.builtin.file:
+        path: "/home/{{ item }}/.ssh"
+        state: directory
+        owner: "{{item}}"
+        group: "{{item}}"
+      become: yes
+      with_items: "{{users}}"
       tags: git
 
-    - name: add user arya
-      ansible.builtin.user:
-       name: arya
+    - name: Copy Git configuration file
+      ansible.builtin.template:
+        src: files/gitconfig
+        dest: "/home/{{ item }}/.gitconfig"
+        owner: "{{item}}"
+        group: "{{item}}"
       become: yes
-      tags: user
+      with_items: "{{users}}"
+      tags: git
+
+    - name: Upload public SSH key
+      ansible.builtin.copy:
+        src: files/id_rsa.pub
+        dest: "/home/{{ item }}/.ssh/authorized_keys"
+        owner: "{{ item }}"
+        group: "{{ item }}"
+        mode: "0600"
+      become: yes
+      with_items: "{{ users }}"
+      tags: git
     
-    - name: add user sansa
-      ansible.builtin.user:
-       name: sansa
-      become: yes
-      tags: user
-
-    - name: add user tirion
-      ansible.builtin.user:
-       name: tirion
-      become: yes
-      tags: user
-
     - name: install nginx
       ansible.builtin.apt: 
         name: nginx 
