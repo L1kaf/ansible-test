@@ -1,4 +1,8 @@
 - hosts: webservers
+  roles:
+    - andrelohmann.postgresql
+    - 030.ansible_git_crypt
+    - Aplyca.NodeJS
   vars:
     index_content: "This is server {{ansible_hostname}}!"
     root_dir: /usr/share/nginx/html
@@ -13,14 +17,6 @@
         update_cache: yes
       become: yes
 
-    - name: install git
-      ansible.builtin.apt: 
-        name: git 
-        state: present 
-        update_cache: yes
-      become: yes
-      tags: git
-
     - name: install Make
       ansible.builtin.apt: 
         name: make 
@@ -28,14 +24,6 @@
         update_cache: yes
       become: yes
       tags: make
-      
-    - name: install nodejs
-      ansible.builtin.apt: 
-        name: nodejs 
-        state: present 
-        update_cache: yes
-      become: yes
-      tags: nodejs
 
     - name: create users
       ansible.builtin.user:
