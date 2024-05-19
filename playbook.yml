@@ -1,6 +1,6 @@
 - hosts: webservers
-  gather_facts: no
   vars:
+    index_content: "This is server {{ansible_hostname}}!"
     root_dir: /usr/share/nginx/html
     nginx_port: 80
     users: 
@@ -84,8 +84,8 @@
       tags: nginx
 
     - name: Copy HTML file
-      ansible.builtin.copy:
-        src: files/index.html
+      ansible.builtin.template:
+        src: files/index.html.j2
         dest: "{{root_dir}}/index.html"
       become: yes
       tags: nginx
