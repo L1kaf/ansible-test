@@ -1,12 +1,12 @@
 - hosts: webservers
   roles:
-    - andrelohmann.postgresql
-    - 030.ansible_git_crypt
-    - Aplyca.NodeJS
+    - user_environment
   vars:
     index_content: "This is server {{ansible_hostname}}!"
     root_dir: /usr/share/nginx/html
     nginx_port: 80
+    username: "desired_username"
+    password: "desired_password"
     users: 
       - jaime
       - sansa
