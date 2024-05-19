@@ -74,6 +74,20 @@
       become: yes
       with_items: "{{ users }}"
       tags: git
+
+    - name: install cowsay
+      ansible.builtin.apt: 
+        name: cowsay 
+        state: present 
+        update_cache: yes
+      become: yes
+      tags: [nginx, cowsay]
+
+    - name: Register Cowsay output
+      ansible.builtin.command:
+        cmd: "cowsay 'This is server {{ ansible_hostname }}!'"
+      register: cowsay_result
+      tags: [cowsay, nginx]
     
     - name: install nginx
       ansible.builtin.apt: 
